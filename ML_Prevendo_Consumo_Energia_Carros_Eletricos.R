@@ -16,8 +16,10 @@ getwd()
 # Instale os pacotes necessários
 #install.packages("httr")
 #install.packages("readxl")
+#install.packages("caret")
 #install.packages("ggplot2")
 #install.packages("reshape2")
+#install.packages("gridExtra")
 #install.packages("ggcorrplot")
 #install.packages("psych")
 
@@ -29,6 +31,7 @@ library(readxl)
 library(caret)
 library(ggplot2)
 library(reshape2)
+library(gridExtra)
 library(ggcorrplot)
 library(psych)
 
@@ -173,12 +176,6 @@ View(dados_dummies)
 
 # EXPLORAÇÃO INICIAL DOS DADOS (EDA)
 
-# Variáveis e tipos de dados
-str(dados)
-str(dados_dummies)
-# Estatísticas resumidas
-summary(dados) 
-
 # Criar uma lista de resumos, um para cada coluna
 summaries <- lapply(dados, summary)
 
@@ -200,11 +197,6 @@ ggcorrplot(cor_matrix,
            lab = TRUE, 
            title = "Matriz de Correlação entre Variáveis Numéricas")
 pairs()
-
-
-# Este gráfico fornece mais informações sobre o relacionamento entre as variáveis
-pairs.panels(despesas[c("idade", "bmi", "filhos", "gastos")])
-
 
 # 2. Gráfico de visualização combinada 
 
@@ -265,27 +257,6 @@ ggplot(dados, aes(x = MediaConsumoEnergiaKWh100km)) +
     y = "Frequência"
   ) +
   theme_minimal()
-
-# 3. Gráfico de Dispersão: Potência do Motor vs. Preço Mínimo
-ggplot(dados, aes(x = MediaConsumoEnergiaKWh100km, y = )) +
-  geom_point(color = "green", size = 3) +
-  labs(
-    title = "Relação entre Potência do Motor e Preço Mínimo",
-    x = "Potência do Motor (KM)",
-    y = "Preço Mínimo Bruto (PLN)"
-  ) +
-  theme_minimal()
-
-# 4. Boxplot do Torque Máximo (Nm)
-ggplot(dados, aes(y = TorqueMaximoNm)) +
-  geom_boxplot(fill = "orange", color = "black") +
-  labs(
-    title = "Boxplot do Torque Máximo (Nm)",
-    y = "Torque Máximo (Nm)"
-  ) +
-  theme_minimal()
-
-
 
 
 # Identificar a última coluna como alvo
