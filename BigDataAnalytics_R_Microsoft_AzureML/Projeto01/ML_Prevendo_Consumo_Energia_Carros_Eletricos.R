@@ -3,7 +3,7 @@
 #           o consumo de energia de veículos elétricos.
 
 # Configurando o diretório de trabalho
-setwd("C:/Users/jtmc/Documents/DSA/BigDataAnalytics_R_Microsoft_AzureML/Projeto01")
+setwd("C:/Users/jtmc/Documents/DSA/ProjetosDSA/BigDataAnalytics_R_Microsoft_AzureML/Projeto01")
 getwd()
 
 
