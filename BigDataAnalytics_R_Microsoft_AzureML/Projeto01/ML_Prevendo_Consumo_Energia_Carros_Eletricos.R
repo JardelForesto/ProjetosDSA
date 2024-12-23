@@ -1,6 +1,6 @@
 
-# Objetivo: Construir um modelo de Machine Learning capaz de prever
-#           o consumo de energia de veículos elétricos.
+# Objetivo: Construir um modelo de Machine Learning capaz de prever 
+#           o consumo de energia de veículos elétricos.")
 
 # Configurando o diretório de trabalho
 setwd("C:/Users/jtmc/Documents/DSA/ProjetosDSA/BigDataAnalytics_R_Microsoft_AzureML/Projeto01")
@@ -22,18 +22,19 @@ getwd()
 #install.packages("gridExtra")
 #install.packages("ggcorrplot")
 #install.packages("psych")
-
+#install.packages("DataExplorer")
 
 
 # Carregando os pacotes necessários
-library(httr)
-library(readxl)
-library(caret)
-library(ggplot2)
-library(reshape2)
-library(gridExtra)
-library(ggcorrplot)
-library(psych)
+library(httr, quietly = TRUE)
+library(readxl, quietly = TRUE)
+library(caret, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(reshape2, quietly = TRUE)
+library(gridExtra, quietly = TRUE)
+library(ggcorrplot, quietly = TRUE)
+library(psych, quietly = TRUE)
+library(DataExplorer, quietly = TRUE)
 
 
 # COLETA DOS DADOS
@@ -41,7 +42,7 @@ library(psych)
 # URL do arquivo
 url <- "https://data.mendeley.com/public-files/datasets/tb9yrptydn/files/8dcbbd5f-d7b5-469b-91f2-698093ff6f16/file_downloaded"
 
-# Nome do arquivo para salvar localmente
+# O arquivo está formato xlsx com o nome FEV-data-Excel, vamos salvar localmente
 arquivo_local <- "dados.xlsx"
 
 # Fazendo o download do arquivo
@@ -68,8 +69,12 @@ if (status_code(resposta) == 200) {
 excel_sheets("dados.xlsx")
 
 # Lendo a planilha do Excel
-View(dados)
 dim(dados)
+
+# Análise exploratória inicial com o pacote DataExplorer
+create_report(dados)
+
+
 
 # PRÉ-PROCESSAMENTO DE DADOS:
 
@@ -83,7 +88,6 @@ dados_ausentes <- dados[!complete.cases(dados), ]
 
 # Remover os registros com valores ausentes do data frame original
 dados <- na.omit(dados)
-View(dados)
 
 # FEATURE ENGINEERING
 
@@ -151,12 +155,8 @@ dados$NumeroPortas <- factor(dados$NumeroPortas)
 dados$TamanhoPneuPol <- factor(dados$TamanhoPneuPol)
 
 # Separar variáveis numéricas e variáveis tipo fator
-dados_fator <- dados[, sapply(dados, is.factor)]
+dados_fatores <- dados[, sapply(dados, is.factor)]
 dados_numericos <- dados[sapply(dados, is.numeric)]
-
-install.packages("DataExplorer")
-library(DataExplorer)
-create_report(dados)
 
 
 # EXPLORAÇÃO INICIAL DOS DADOS (EDA)
@@ -164,9 +164,6 @@ create_report(dados)
 # Criar uma lista de resumos, um para cada coluna
 summary(dados_numericos)
 
-help(summary)
-
-str(dados)
 
 # 1. Matriz de Correlação
 
