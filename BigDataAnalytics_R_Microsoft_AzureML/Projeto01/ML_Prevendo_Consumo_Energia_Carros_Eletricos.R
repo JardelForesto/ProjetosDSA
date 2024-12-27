@@ -1,40 +1,41 @@
 
-# Objetivo: Construir um modelo de Machine Learning capaz de prever 
-#           o consumo de energia de veículos elétricos.")
+# Objetivo: Construir um modelo de Machine Learning capaz de prever o consumo de energia de veículos elétricos.
 
 # Configurando o diretório de trabalho
 setwd("C:/Users/jtmc/Documents/DSA/ProjetosDSA/BigDataAnalytics_R_Microsoft_AzureML/Projeto01")
 getwd()
 
 
-# Para realizar o trabalho, iremos fazer um web scraping e baixar diretamente
-# o arquivo do endereço para o R.
+# Para realizar o trabalho, iremos fazer um web scraping e baixar diretamente o arquivo do endereço para o R.
 
-# Você pode usar o pacote httr para gerenciar requisições HTTP
-# e o readxl para carregar o conteúdo do arquivo.
+# Você pode usar o pacote httr para gerenciar requisições HTTP e o readxl para carregar o conteúdo do arquivo.
 
 # Instale os pacotes necessários
 #install.packages("httr")
 #install.packages("readxl")
-#install.packages("caret")
+#install.packages("ggcorrplot")
 #install.packages("ggplot2")
+
+#install.packages("DataExplorer")
 #install.packages("reshape2")
 #install.packages("gridExtra")
-#install.packages("ggcorrplot")
 #install.packages("psych")
-#install.packages("DataExplorer")
+#install.packages("caret")
+
+
 
 
 # Carregando os pacotes necessários
-library(httr, quietly = TRUE)
-library(readxl, quietly = TRUE)
-library(caret, quietly = TRUE)
-library(ggplot2, quietly = TRUE)
-library(reshape2, quietly = TRUE)
-library(gridExtra, quietly = TRUE)
-library(ggcorrplot, quietly = TRUE)
-library(psych, quietly = TRUE)
-library(DataExplorer, quietly = TRUE)
+suppressWarnings(library(httr))
+suppressWarnings(library(readxl))
+suppressWarnings(library(DataExplorer))
+suppressWarnings(library(ggcorrplot))
+suppressWarnings(library(ggplot2))
+suppressWarnings(library(reshape2))
+suppressWarnings(library(gridExtra))
+suppressWarnings(library(psych, quietly = TRUE, warn.conflicts = FALSE))
+suppressWarnings(library(caret, quietly = TRUE, warn.conflicts = FALSE))
+
 
 
 # COLETA DOS DADOS
@@ -50,15 +51,15 @@ resposta <- GET(url, write_disk(arquivo_local, overwrite = TRUE))
 
 # Verificando se o download foi bem-sucedido
 if (status_code(resposta) == 200) {
-  # Lendo o arquivo .xlsx baixado e Importando para um dataframe
+  #### Lendo o arquivo .xlsx baixado e Importando para um dataframe
   dados <- read_excel(arquivo_local)
   
-  # Removendo objetos desnecessários para economizar memória
+  #### Removendo objetos desnecessários para economizar memória
   rm(arquivo_local, resposta, url)
   
   message("Download realizado com sucesso!")
   
-  # Visualizando as primeiras linhas
+  #### Visualizando as primeiras linhas
   print(head(dados))
   
 } else {
@@ -71,9 +72,8 @@ excel_sheets("dados.xlsx")
 # Lendo a planilha do Excel
 dim(dados)
 
-# Análise exploratória inicial com o pacote DataExplorer
+## Análise exploratória inicial com o pacote DataExplorer
 create_report(dados)
-
 
 
 # PRÉ-PROCESSAMENTO DE DADOS:
@@ -89,6 +89,7 @@ dados_ausentes <- dados[!complete.cases(dados), ]
 # Remover os registros com valores ausentes do data frame original
 dados <- na.omit(dados)
 
+
 # FEATURE ENGINEERING
 
 # RENOMEAÇÃO DE COLUNAS
@@ -98,7 +99,6 @@ colnames(dados)
 
 # Grava os nomes das colunas em um vetor
 myColumns <- colnames(dados)
-myColumns
 
 # Atribue o novo nome para cada coluna
 myColumns[1] <- "NomeCarro"  
@@ -162,6 +162,7 @@ dados_numericos <- dados[sapply(dados, is.numeric)]
 # EXPLORAÇÃO INICIAL DOS DADOS (EDA)
 
 # Criar uma lista de resumos, um para cada coluna
+summary(dados_fatores)
 summary(dados_numericos)
 
 
@@ -173,7 +174,6 @@ cor_matrix <- cor(dados_numericos, use = "complete.obs")
 ggcorrplot(cor_matrix, 
            lab = TRUE, 
            title = "Matriz de Correlação entre Variáveis Numéricas")
-#pairs()
 
 # 2. Gráfico de visualização combinada 
 
